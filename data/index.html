@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento | PoF</title>
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+</head>
+<body>
+
+ <div id="login-overlay" class="login-overlay active">
+    
+    <div class="login-top-bar">
+        <button id="login-theme-btn" class="btn-glass icon-only" title="Alternar Tema">
+            <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
+    </div>
+
+    <div class="login-bg-fx">
+        <div class="login-bg-blob b1"></div>
+        <div class="login-bg-blob b2"></div>
+        <div class="login-bg-blob b3"></div>
+        <div class="login-bg-blob b4"></div>
+        <div class="login-bg-blob b5"></div>
+        <div class="login-bg-blob b6"></div>
+    </div>
+    
+    <div class="glass-card login-card">
+        <div class="login-header">
+            <div class="login-icon-wrapper">
+    <div class="icon-box electric-glow" style="width: 72px; height: 72px; padding: 16px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="width: 100%; height: 100%;">
+            <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+            <rect x="9" y="9" width="6" height="6"></rect>
+            <path d="M9 1v3"></path><path d="M15 1v3"></path><path d="M9 20v3"></path><path d="M15 20v3"></path>
+            <path d="M20 9h3"></path><path d="M20 14h3"></path><path d="M1 9h3"></path><path d="M1 14h3"></path>
+        </svg>
+    </div>
+</div>
+            <h2>Acesso Restrito</h2>
+            <p>Sistema de Monitoramento PoF</p>
+        </div>
+        
+        <form id="login-form">
+            <div class="input-group-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <input type="text" id="login-user" placeholder="Usuário" class="glass-input-full" required autocomplete="off">
+            </div>
+            
+            <div class="input-group-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <input type="password" id="login-pass" placeholder="Senha" class="glass-input-full" required>
+            </div>
+
+            <button type="submit" class="btn-glass login-btn">
+                <span>Acessar Painel</span>
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+            </button>
+            
+            <p id="login-error" class="login-error" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Credenciais inválidas
+            </p>
+        </form>
+    </div>
+
+    <div class="login-page-footer">
+        <p>© 2026 Sistema PoF &bull; Status: <span style="color:var(--success-color)">Online</span> &bull; v2.9.0</p>
+    </div>
+</div>
+
+    <div class="app-background"></div>
+
+    <div id="connection-overlay" class="connection-overlay">
+        <div class="loader-spinner"></div>
+        <h3>Conexão Perdida</h3>
+        <p>Tentando reconectar ao dispositivo...</p>
+    </div>
+
+    <aside id="nav-sidebar" class="nav-sidebar glass-card">
+        <div class="nav-brand">
+            <div class="icon-box electric-glow" style="width: 32px; height: 32px;">⚡</div>
+            <span>Sistema PoF</span>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active" data-target="view-dashboard">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Dashboard
+            </a>
+            <a href="#" class="nav-item" data-target="view-reports">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Relatórios
+            </a>
+            <a href="#" class="nav-item" data-target="view-settings">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Configurações
+            </a>
+        </nav>
+        <div class="nav-footer">
+            <span class="version-tag">v2.9.0 (ESP32)</span>
+        </div>
+    </aside>
+
+    <div id="log-sidebar" class="log-sidebar glass-card">
+        <div class="log-header">
+            <h3>Notificações</h3>
+            <button id="close-log-btn" class="btn-ghost">✕</button>
+        </div>
+        <div id="log-list" class="log-list">
+            <div class="empty-log">Nenhum evento registrado.</div>
+        </div>
+        <button id="clear-log-btn" class="btn-glass" style="width: 100%; margin-top: 10px; justify-content: center;">Limpar Histórico</button>
+    </div>
+
+    <div class="container">
+        <div id="alert-banner" class="alert-banner">
+            <div class="hazard-stripes"></div>
+            <div class="alert-content">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span>SOBRECARGA DETECTADA!</span>
+            </div>
+        </div>
+
+        <header class="glass-header">
+            <div class="brand-section">
+                <button id="menu-toggle-btn" class="btn-ghost icon-only">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <div id="connection-status" class="status-indicator" title="Status da Conexão"></div>
+                <div class="brand-text">
+                    <h1>Painel de Monitoramento | PoF</h1>
+                    <span class="badge-live">LIVE</span>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <button id="fullscreen-btn" class="btn-glass icon-only" title="Expandir Gráfico">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                </button>
+
+                <button id="toggle-log-btn" class="btn-glass" title="Ver Logs">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <span id="log-badge" class="badge-count" style="display:none">0</span>
+                </button>
+
+                <button id="download-csv-button" class="btn-glass icon-only" title="Baixar Histórico CSV">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                </button>
+
+                <div class="user-menu">
+                    <button class="btn-glass user-trigger" id="user-menu-trigger">
+                        <span id="welcome-message" class="skeleton">Carregando...</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                    </button>
+                    <div class="dropdown-content glass-dropdown" id="dropdown-content">
+                        <a href="#" id="logout-link">Encerrar Sessão</a>
+                    </div>
+                </div>
+
+                <div class="theme-switcher-wrapper">
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider glass-slider">
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section id="view-dashboard" class="view-section active">
+                <div class="dashboard-grid">
+                    
+                    <div class="card glass-card hero-card" data-tilt data-tilt-glare data-tilt-max-glare="0.05" data-tilt-scale="1.01">
+                        <div class="card-header">
+                            <div class="icon-box electric-glow">⚡</div>
+                            <h2>Monitoramento em Tempo Real</h2>
+                        </div>
+                        <div class="card-body metrics-layout">
+                            <div class="metric-hero">
+                                <span class="label">Corrente</span>
+                                <div class="value-wrapper-hero">
+                                    <span class="value hero-value skeleton" id="current-value">0.000</span>
+                                    <span class="unit-hero">mA</span>
+                                    <div class="trend-badge" id="current-trend-badge">
+                                        <span class="trend-icon">―</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="divider"></div>
+
+                            <div class="metrics-secondary">
+                                <div class="metric-item">
+                                    <span class="label">Tensão</span>
+                                    <div class="value-wrapper-sub">
+                                        <span class="value sub-value skeleton" id="voltage-value">0.0</span>
+                                        <span class="unit">V</span>
+                                        <div class="trend-badge-sm" id="voltage-trend-badge">
+                                            <span class="trend-icon">―</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="label">Potência</span>
+                                    <div class="value-wrapper-sub">
+                                        <span class="value sub-value skeleton" id="power-value">0.00</span>
+                                        <span class="unit">W</span>
+                                        <div class="trend-badge-sm" id="power-trend-badge">
+                                            <span class="trend-icon">―</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.05">
+                        <div class="card-header space-between">
+                            <div class="header-left">
+                                <div class="icon-box stats-glow">📊</div>
+                                <h2>Sessão Atual</h2>
+                            </div>
+                            <button id="reset-stats-button" class="btn-ghost" title="Zerar Estatísticas">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                            </button>
+                        </div>
+                        <div class="card-body stats-list">
+                            <div class="stat-row highlight-row">
+                                <div class="stat-group"><span class="stat-label">Tempo</span><span class="stat-value" id="session-timer">00:00:00</span></div>
+                            </div>
+                            <div class="divider" style="margin: 10px 0; opacity: 0.3;"></div>
+                            <div class="stat-row"><span class="stat-label">Pico Corrente</span><div class="dots"></div><span class="stat-value"><span id="max-current-value" class="skeleton">0.000</span> mA</span></div>
+                            <div class="stat-row"><span class="stat-label">Pico Potência</span><div class="dots"></div><span class="stat-value"><span id="max-power-value" class="skeleton">0.00</span> W</span></div>
+                            <div class="stat-row"><span class="stat-label">Pico Tensão</span><div class="dots"></div><span class="stat-value"><span id="max-voltage-value" class="skeleton">0.0</span> V</span></div>
+                        </div>
+                    </div>
+                    
+                    <div id="chart-card" class="card glass-card large-card">
+                        <div class="card-header space-between">
+                            <div class="header-left"><div class="icon-box graph-glow">📈</div><h2>Histórico</h2></div>
+                            <div class="graph-toolbar">
+                            
+                                <button id="pause-chart-btn" class="btn-glass" style="padding: 4px 12px; font-size: 0.8rem;"><span id="pause-icon">⏸</span> Congelar</button>
+                                <div class="toggle-group">
+                                    <label class="custom-checkbox"><input type="checkbox" id="toggle-current" checked><span class="checkmark"></span> Corrente</label>
+                                    <label class="custom-checkbox"><input type="checkbox" id="toggle-voltage"><span class="checkmark"></span> Tensão</label>
+                                    <label class="custom-checkbox"><input type="checkbox" id="toggle-power"><span class="checkmark"></span> Potência</label>
+                                </div>
+                                <div class="input-limit-wrapper">
+                                    <span class="limit-label">Alerta (A):</span>
+                                    <input type="number" id="alert-threshold" class="glass-input" value="2.5" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body chart-container">
+                            <canvas id="current-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-reports" class="view-section" style="display: none;">
+                <div class="card glass-card large-card">
+                    <div class="card-header space-between">
+                        <div class="header-left">
+                            <div class="icon-box stats-glow">📑</div>
+                            <h2>Relatório de Eventos</h2>
+                        </div>
+                        <button id="download-report-btn" class="btn-glass">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+                            Baixar CSV
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="glass-table" id="reports-table">
+                                <thead>
+                                    <tr>
+                                        <th>Horário</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="empty-table-row"><td colspan="4">Nenhum dado registrado ainda.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-settings" class="view-section" style="display: none;">
+                <div class="dashboard-grid">
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <div class="icon-box electric-glow">⚙️</div>
+                            <h2>Preferências</h2>
+                        </div>
+                        <div class="card-body settings-form">
+                            <div class="setting-group">
+                                <label>Taxa de Atualização</label>
+                                <select id="setting-refresh-rate" class="glass-input-lg" style="width: 100%;">
+                                    <option value="500">Rápido (0.5s)</option>
+                                    <option value="1000" selected>Normal (1s)</option>
+                                    <option value="2000">Lento (2s)</option>
+                                    <option value="5000">Econômico (5s)</option>
+                                </select>
+                                <p class="setting-hint">Intervalo de leitura dos dados do sensor.</p>
+                            </div>
+
+                            <div class="setting-group">
+                                <label>Limite de Alerta (A)</label>
+                                <div class="input-with-unit">
+                                    <input type="number" id="setting-alert-threshold" class="glass-input-lg" step="0.1">
+                                    <span>A</span>
+                                </div>
+                                <p class="setting-hint">Define quando o alerta vermelho será disparado.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card glass-card">
+                        <div class="card-header">
+                            <div class="icon-box danger-glow" style="color:var(--danger-color); background: rgba(239, 68, 68, 0.1);">⚠️</div>
+                            <h2>Zona de Perigo</h2>
+                        </div>
+                        <div class="card-body">
+                            <p style="color: var(--text-muted); margin-bottom: 20px;">Ações irreversíveis que afetam o histórico da sessão atual.</p>
+                            <button id="factory-reset-btn" class="btn-glass" style="border-color: var(--danger-color); color: var(--danger-color); width: 100%;">
+                                Resetar Fábrica (Limpar Tudo)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
