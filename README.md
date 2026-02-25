@@ -1,36 +1,68 @@
-# Plataforma de Monitoramento Remoto para Sistemas Power-over-Fiber (PoF)
+# Remote Monitoring Platform for Power-over-Fiber (PoF) Systems
 
-Este repositório contém o código-fonte e os arquivos do sistema de monitoramento inteligente desenvolvido para otimizar a eficiência e garantir a operação estável de enlaces *Power-over-Fiber* (PoF). O projeto utiliza um microcontrolador ESP32 para aquisição de dados em tempo real e atua como um servidor web embarcado, fornecendo uma interface gráfica interativa para supervisão.
+This repository contains the source code and files for the smart monitoring system developed to optimize efficiency and ensure stable operation of Power-over-Fiber (PoF) links. The project uses an ESP32 microcontroller for real-time data acquisition and acts as an embedded web server, providing an interactive graphical interface for supervision.
 
-## 🚀 Funcionalidades
+## 🚀 Features
 
-* **Aquisição de Dados em Tempo Real:** Leitura contínua de tensão, corrente e potência utilizando o sensor MAX471.
-* **Interface Web Embarcada:** *Dashboard* interativo (Single Page Application) servido diretamente pelo ESP32.
-* **Gráficos Dinâmicos:** Visualização temporal das grandezas elétricas com taxas de atualização configuráveis.
-* **Sistema de Alertas:** Notificações visuais e sonoras integradas na interface caso os limites de segurança sejam ultrapassados (ex: sobrecorrente ou circuito aberto).
-* **Exportação de Dados:** Geração e download do histórico completo da sessão em formato `.CSV` para análises posteriores.
+* **Real-Time Data Acquisition:** Continuous reading of voltage, current, and power using the MAX471 sensor.
+* **Embedded Web Interface:** Interactive *Dashboard* (Single Page Application) served directly by the ESP32.
+* **Dynamic Charts:** Temporal visualization of electrical parameters with configurable refresh rates.
+* **Alert System:** Visual and audible notifications integrated into the interface in case safety limits are exceeded (e.g., overcurrent or open circuit).
+* **Data Export:** Generation and download of the complete session history in `.CSV` format for further analysis.
 
-## 🛠️ Hardware Utilizado
+## 🛠️ Hardware Used
 
-* **Microcontrolador:** ESP32
-* **Sensor de Corrente/Tensão:** MAX471
-* **Componentes PoF:** * High-Power Laser Diode (HPLD) em 808 nm
-  * Fibra Óptica Multimodo (62,5/125 µm)
+* **Microcontroller:** ESP32
+* **Current/Voltage Sensor:** MAX471
+* **PoF Components:** * High-Power Laser Diode (HPLD) at 808 nm
+  * Multimode Optical Fiber (62.5/125 µm)
   * Photovoltaic Power Converter (PPC)
-* **Conversor DC/DC:** Step-up (para elevar a tensão à carga final)
+* **DC/DC Converter:** Step-up (to boost the voltage to the final load)
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
-O projeto foi desenvolvido utilizando a extensão **PlatformIO** no **Visual Studio Code (VSCode)**. A estrutura principal de diretórios é a seguinte:
-
+The project was developed using the **PlatformIO** extension in **Visual Studio Code (VSCode)**. The main directory structure is as follows:
 ```text
-├── data/               # Arquivos da interface Web (Frontend)
-│   ├── index.html      # Estrutura HTML da Single Page Application
-│   ├── style.css       # Estilos visuais e temas (Light/Dark mode)
-│   └── script.js       # Lógica do frontend, gráficos e requisições assíncronas
-├── src/                # Código-fonte do Firmware (Backend)
-│   └── main.cpp        # Lógica principal em C/C++ (Aquisição, Wi-Fi, Servidor Web)
-├── include/            # Arquivos de cabeçalho adicionais (se houver)
-├── lib/                # Bibliotecas externas específicas do projeto
-└── platformio.ini      # Arquivo de configuração de ambiente e dependências do PlatformIO
+    ├── data/               # Web interface files (Frontend)
+    │   ├── index.html      # HTML structure of the Single Page Application
+    │   ├── style.css       # Visual styles and themes (Light/Dark mode)
+    │   └── script.js       # Frontend logic, charts, and asynchronous requests
+    ├── src/                # Firmware source code (Backend)
+    │   └── main.cpp        # Main logic in C/C++ (Acquisition, Wi-Fi, Web Server)
+    ├── include/            # Additional header files (if any)
+    ├── lib/                # Project-specific external libraries
+    └── platformio.ini      # PlatformIO environment configuration and dependencies file
 ```
+## ⚙️ How to Install and Run
+
+### Prerequisites
+1. [Visual Studio Code](https://code.visualstudio.com/) installed.
+2. [PlatformIO IDE](https://platformio.org/install/ide?install=vscode) extension installed in VSCode.
+
+### Flashing Steps
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/EduBertozzi/pof-monitoring.git
+   ```
+   
+3. Open the project folder in VSCode. PlatformIO will initialize the environment and download dependencies automatically based on the `platformio.ini` file.
+4. **Upload the Filesystem Image (Frontend):** Since the HTML, CSS, and JS files are in the `data` folder, you need to upload them to the ESP32's flash memory (SPIFFS/LittleFS).
+   * In VSCode, open the PlatformIO sidebar (the alien icon).
+   * Go to `Project Tasks` -> `esp32dev` -> `Platform` -> click on **Build Filesystem Image** and then **Upload Filesystem Image**.
+5. **Upload the Firmware (Backend):**
+   * Connect your ESP32 via USB.
+   * In the bottom PlatformIO menu (or in `Project Tasks`), click the right-arrow icon (`Upload`) to compile and flash the code located in the `src` folder.
+
+## 🖥️ System Access
+After flashing the code and the filesystem, open the PlatformIO Serial Monitor (plug icon on the bottom bar) with the configured baud rate (e.g., 115200). 
+1. Connect to the Wi-Fi network generated by the ESP32 or check the IP address assigned to it on your local network.
+2. Open your PC or smartphone browser and type the IP address provided in the Serial Monitor to access the monitoring dashboard.
+
+## 📄 Authors
+
+Developed at the Instituto Nacional de Telecomunicações (Inatel) by:
+* Eduardo M. Bertozzi
+* Breno C. do Nascimento
+* Letícia C. de Souza
+
+*Project linked to the paper: "Implementação de uma Plataforma de Monitoramento Remoto para Sistemas Power-over-Fiber".*
